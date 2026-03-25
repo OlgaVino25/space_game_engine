@@ -1,0 +1,36 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+*.pyd
+*.so
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Environment variables
+.env
+.env.local
