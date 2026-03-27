@@ -4,42 +4,8 @@ from itertools import cycle
 from .curses_tools import draw_frame, get_frame_size, read_controls
 
 
-async def draw_spaceship(canvas, coords, frame1, frame2):
-    """Анимация космического корабля.
-
-    Циклически переключает два кадра (frame1 и frame2).
-    Предыдущий кадр стирается перед отрисовкой нового.
-    Координаты корабля могут меняться внешним кодом (через coords).
-
-    Args:
-        canvas: curses window объект.
-        coords (list): список из двух элементов [row, column] — текущие
-            координаты левого верхнего угла корабля. Список изменяем,
-            чтобы анимация следовала за перемещением.
-        frame1 (str): первый кадр анимации (многострочная строка).
-        frame2 (str): второй кадр анимации.
-
-    Returns:
-        None. Корутина работает бесконечно.
-    """
-
-    frames = cycle([frame1, frame2])
-    current_frame = None
-    prev_row, prev_column = coords[0], coords[1]
-
-    while True:
-        next_frame = next(frames)
-
-        if current_frame is not None:
-            draw_frame(canvas, prev_row, prev_column, current_frame, negative=True)
-
-        draw_frame(canvas, coords[0], coords[1], next_frame)
-        current_frame = next_frame
-        prev_row, prev_column = coords[0], coords[1]
-        canvas.refresh()
-
-        for _ in range(2):
-            await asyncio.sleep(0)
+BORDER_OFFSET = 1
+FRAME_DELAY_TICKS = 2
 
 
 async def handle_spaceship(canvas, frame1, frame2, speed=1, exit_flag=None):
@@ -49,6 +15,8 @@ async def handle_spaceship(canvas, frame1, frame2, speed=1, exit_flag=None):
         canvas: curses window.
         frame1, frame2: кадры анимации.
         speed: скорость перемещения (пикселей за нажатие).
+        exit_flag: список из одного элемента [bool], при нажатии Esc
+                   устанавливает exit_flag[0] = True.
     """
     frame_height, frame_width = get_frame_size(frame1)
 
@@ -70,10 +38,10 @@ async def handle_spaceship(canvas, frame1, frame2, speed=1, exit_flag=None):
         ship_row += rows_dir * speed
         ship_col += cols_dir * speed
 
-        max_row = canvas.getmaxyx()[0] - frame_height - 1
-        max_col = canvas.getmaxyx()[1] - frame_width - 1
-        ship_row = max(1, min(ship_row, max_row))
-        ship_col = max(1, min(ship_col, max_col))
+        max_row = canvas.getmaxyx()[0] - frame_height - BORDER_OFFSET
+        max_col = canvas.getmaxyx()[1] - frame_width - BORDER_OFFSET
+        ship_row = max(BORDER_OFFSET, min(ship_row, max_row))
+        ship_col = max(BORDER_OFFSET, min(ship_col, max_col))
 
         next_frame = next(frames)
 
@@ -85,5 +53,5 @@ async def handle_spaceship(canvas, frame1, frame2, speed=1, exit_flag=None):
         prev_row, prev_col = ship_row, ship_col
         canvas.refresh()
 
-        for _ in range(2):
+        for _ in range(FRAME_DELAY_TICKS):
             await asyncio.sleep(0)

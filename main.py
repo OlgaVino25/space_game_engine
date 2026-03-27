@@ -7,9 +7,13 @@ from animate.fire import fire
 from animate.spaceship import handle_spaceship
 
 
+BORDER_WIDTH = 1
+MIN_COORD = BORDER_WIDTH + 1
 TIC_TIMEOUT = 0.1
 SYMBOLS = "+*.:"
+STARS_COUNT = 100
 SPACESHIP_SPEED = 5
+EXIT_PAUSE = 2
 
 with open("animate/rocket_frame_1.txt", "r") as file_1:
     text_1 = file_1.read()
@@ -39,17 +43,17 @@ def draw(canvas):
 
     height, width = canvas.getmaxyx()
 
-    max_row = height - 2
-    max_column = width - 2
+    max_row = height - 2 * BORDER_WIDTH
+    max_column = width - 2 * BORDER_WIDTH
 
     start_row = height // 2
     start_column = width // 2
 
     coroutines = []
 
-    for _ in range(100):
-        row = random.randint(1, max_row)
-        column = random.randint(1, max_column)
+    for _ in range(STARS_COUNT):
+        row = random.randint(MIN_COORD, max_row)
+        column = random.randint(MIN_COORD, max_column)
         symbol = random.choice(SYMBOLS)
         coroutines.append(blink(canvas, row, column, symbol))
 
@@ -78,7 +82,7 @@ def draw(canvas):
         if exit_flag[0]:
             break
 
-    time.sleep(2)
+    time.sleep(EXIT_PAUSE)
 
 
 def main():

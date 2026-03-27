@@ -2,7 +2,10 @@ import asyncio
 import curses
 
 
-async def fire(canvas, start_row, start_column, rows_speed=-0.3, columns_speed=0):
+SHOT_SPEED = -0.3
+
+
+async def fire(canvas, start_row, start_column, rows_speed=SHOT_SPEED, columns_speed=0):
     """Анимация выстрела.
 
     Выстрел начинается с заданной позиции и движется с указанной скоростью.
