@@ -5,7 +5,6 @@ from .curses_tools import draw_frame, get_frame_size, read_controls
 
 
 BORDER_OFFSET = 1
-FRAME_DELAY_TICKS = 2
 
 
 async def handle_spaceship(canvas, frame1, frame2, speed=1, exit_flag=None):
@@ -24,7 +23,8 @@ async def handle_spaceship(canvas, frame1, frame2, speed=1, exit_flag=None):
     ship_row = (height - frame_height) // 2
     ship_col = (width - frame_width) // 2
 
-    frames = cycle([frame1, frame2])
+    frames_sequence = [frame1, frame1, frame2, frame2]
+    frames = cycle(frames_sequence)
     current_frame = None
     prev_row, prev_col = ship_row, ship_col
 
@@ -51,7 +51,5 @@ async def handle_spaceship(canvas, frame1, frame2, speed=1, exit_flag=None):
         draw_frame(canvas, ship_row, ship_col, next_frame)
         current_frame = next_frame
         prev_row, prev_col = ship_row, ship_col
-        canvas.refresh()
 
-        for _ in range(FRAME_DELAY_TICKS):
-            await asyncio.sleep(0)
+        await asyncio.sleep(0)
