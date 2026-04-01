@@ -5,6 +5,7 @@ import random
 from animate.blink import blink
 from animate.fire import fire
 from animate.spaceship import handle_spaceship
+from animate.space_garbage import fill_orbit_with_garbage
 
 
 BORDER_WIDTH = 1
@@ -68,6 +69,23 @@ def draw(canvas):
             canvas, text_1, text_2, speed=SPACESHIP_SPEED, exit_flag=exit_flag
         )
     )
+
+    garbage_file = [
+        "animate/duck.txt",
+        "animate/hubble.txt",
+        "animate/lamp.txt",
+        "animate/trash_large.txt",
+        "animate/trash_small.txt",
+        "animate/trash_xl.txt",
+    ]
+
+    garbage_frames = []
+
+    for file_path in garbage_file:
+        with open(file_path, "r") as f:
+            garbage_frames.append(f.read())
+
+        coroutines.append(fill_orbit_with_garbage(canvas, garbage_frames, coroutines))
 
     while coroutines:
         for coroutine in coroutines.copy():
