@@ -11,7 +11,14 @@ BORDER_OFFSET = 1
 
 
 async def handle_spaceship(
-    canvas, frame1, frame2, coroutines, speed_limit=2, fading=0.8, exit_flag=None
+    canvas,
+    frame1,
+    frame2,
+    coroutines,
+    speed_limit=2,
+    fading=0.8,
+    exit_flag=None,
+    obstacles=None,
 ):
     """Управление кораблём с плавной физикой и стрельбой по пробелу.
 
@@ -47,7 +54,7 @@ async def handle_spaceship(
         if space_pressed:
             shot_row = ship_row
             shot_col = ship_col + frame_width // 2
-            coroutines.append(fire(canvas, shot_row, shot_col))
+            coroutines.append(fire(canvas, shot_row, shot_col, obstacles=obstacles))
 
         row_speed, col_speed = update_speed(
             row_speed,

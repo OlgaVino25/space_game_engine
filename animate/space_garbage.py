@@ -64,7 +64,7 @@ async def fill_orbit_with_garbage(
     _, columns = canvas.getmaxyx()
 
     while True:
-        delay_ticks = random.randint(5, 40)
+        delay_ticks = random.randint(1, 40)
         await sleep(delay_ticks)
 
         frame = random.choice(garbage_frame)

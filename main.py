@@ -38,19 +38,19 @@ def draw(canvas):
     Returns:
         None.
     """
-
     curses.curs_set(False)
     canvas.border("|", "|")
     canvas.nodelay(True)
     canvas.refresh()
 
     height, width = canvas.getmaxyx()
-
     max_row = height - 2 * BORDER_WIDTH
     max_column = width - 2 * BORDER_WIDTH
 
     start_row = height // 2
     start_column = width // 2
+
+    obstacles = []
 
     coroutines = []
 
@@ -61,12 +61,17 @@ def draw(canvas):
         coroutines.append(blink(canvas, row, column, symbol))
 
     coroutines.append(
-        fire(canvas, start_row, start_column, rows_speed=-0.3, columns_speed=0)
+        fire(
+            canvas,
+            start_row,
+            start_column,
+            rows_speed=-0.3,
+            columns_speed=0,
+            obstacles=obstacles,
+        )
     )
 
-    obstacles = []
-
-    coroutines.append(show_obstacles(canvas, obstacles))
+    # coroutines.append(show_obstacles(canvas, obstacles))
 
     coroutines.append(
         fill_orbit_with_garbage(canvas, GARBAGE_FRAMES, coroutines, obstacles=obstacles)
@@ -83,6 +88,7 @@ def draw(canvas):
             speed_limit=2,
             fading=0.8,
             exit_flag=exit_flag,
+            obstacles=obstacles,
         )
     )
 
