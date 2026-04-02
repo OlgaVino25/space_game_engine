@@ -4,6 +4,7 @@ from .curses_tools import draw_frame, get_frame_size, read_controls
 from .fire import fire
 from .utils import sleep
 from .physics import update_speed
+from .obstacles import Obstacle
 
 
 BORDER_OFFSET = 1
@@ -72,6 +73,18 @@ async def handle_spaceship(
         max_col = canvas.getmaxyx()[1] - frame_width - BORDER_OFFSET
         ship_row = max(BORDER_OFFSET, min(ship_row, max_row))
         ship_col = max(BORDER_OFFSET, min(ship_col, max_col))
+
+        if obstacles:
+            ship_bbox = (ship_row, ship_col, frame_height, frame_width)
+            for obs in obstacles:
+                if obs.has_collision(ship_row, ship_col, frame_height, frame_width):
+                    if exit_flag is not None:
+                        exit_flag[0] = True
+                    if current_frame is not None:
+                        draw_frame(
+                            canvas, prev_row, prev_col, current_frame, negative=True
+                        )
+                    return
 
         next_frame = next(frames)
 
