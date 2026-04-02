@@ -1,5 +1,6 @@
 import curses
 from .utils import sleep
+from .obstacles import obstacles_in_last_collisions
 
 
 BORDER_WIDTH = 1
@@ -59,6 +60,8 @@ async def fire(
 
         for obs in obstacles:
             if obs.has_collision(r_cur, c_cur):
+                if obs not in obstacles_in_last_collisions:
+                    obstacles_in_last_collisions.append(obs)
                 canvas.addstr(r_cur, c_cur, " ")
                 return
 
