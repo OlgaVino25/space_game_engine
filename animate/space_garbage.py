@@ -7,9 +7,13 @@ from .explosion import explode
 
 
 BORDER_WIDTH = 1
+MIN_GARBAGE_DELAY_TICKS = 1
+MAX_GARBAGE_DELAY_TICKS = 40
 
 
 def load_garbage_frames():
+    """Загружает кадры мусора из файлов."""
+
     garbage_file = [
         "animate/duck.txt",
         "animate/hubble.txt",
@@ -28,7 +32,17 @@ def load_garbage_frames():
 async def fly_garbage(
     canvas, column, garbage_frame, speed=0.5, obstacles=None, coroutines=None
 ):
-    """Анимация падения мусора. При попадании выстрела – взрыв."""
+    """Анимация падения мусора. При попадании выстрела – взрыв.
+
+    Args:
+        canvas: curses window.
+        column (int): колонка, по которой падает мусор.
+        garbage_frame (str): кадр мусора.
+        speed (float): скорость падения (строк за тик).
+        obstacles (list): список препятствий для регистрации.
+        coroutines (list): список корутин для добавления взрыва.
+    """
+
     rows_number, columns_number = canvas.getmaxyx()
     frame_height, frame_width = get_frame_size(garbage_frame)
     column = max(BORDER_WIDTH, min(column, columns_number - BORDER_WIDTH - frame_width))
@@ -62,10 +76,19 @@ async def fly_garbage(
 async def fill_orbit_with_garbage(
     canvas, garbage_frame, coroutines, speed=0.5, obstacles=None
 ):
-    """Бесконечно добавляет мусор на орбиту, передавая coroutines в fly_garbage."""
+    """Бесконечно добавляет мусор на орбиту.
+
+    Args:
+        canvas: curses window.
+        garbage_frames (list): список кадров мусора.
+        coroutines (list): список корутин для добавления новых объектов.
+        speed (float): скорость падения мусора.
+        obstacles (list): список препятствий.
+    """
+
     _, columns = canvas.getmaxyx()
     while True:
-        delay_ticks = random.randint(1, 40)
+        delay_ticks = random.randint(MIN_GARBAGE_DELAY_TICKS, MAX_GARBAGE_DELAY_TICKS)
         await sleep(delay_ticks)
         frame = random.choice(garbage_frame)
         _, frame_width = get_frame_size(frame)

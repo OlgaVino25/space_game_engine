@@ -29,7 +29,16 @@ EXPLOSION_FRAMES = [
     """,
 ]
 
+
 async def explode(canvas, center_row, center_column):
+    """Анимация взрыва.
+
+    Args:
+        canvas: curses window.
+        center_row (float): центр взрыва по строкам.
+        center_column (float): центр взрыва по колонкам.
+    """
+
     rows, columns = get_frame_size(EXPLOSION_FRAMES[0])
     corner_row = center_row - rows / 2
     corner_column = center_column - columns / 2

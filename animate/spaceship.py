@@ -25,11 +25,13 @@ async def handle_spaceship(
     Args:
         canvas: curses window.
         frame1, frame2: кадры анимации.
-        coroutines: список корутин для добавления новых выстрелов.
-        speed_limit: максимальная скорость по каждой оси (пикселей за тик).
-        fading: коэффициент трения (0..1), чем меньше, тем быстрее торможение.
-        exit_flag: список из одного элемента [bool], при нажатии Esc устанавливает exit_flag[0] = True.
+        coroutines: список корутин для добавления выстрелов.
+        speed_limit: максимальная скорость по осям.
+        fading: коэффициент трения (0..1).
+        exit_flag: список [bool] для сигнала выхода.
+        obstacles: список препятствий для проверки столкновений.
     """
+
     frame_height, frame_width = get_frame_size(frame1)
 
     height, width = canvas.getmaxyx()
