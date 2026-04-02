@@ -2,6 +2,7 @@ import random
 
 from .curses_tools import draw_frame, get_frame_size
 from .utils import sleep
+from .obstacles import Obstacle
 
 
 BORDER_WIDTH = 1
@@ -27,24 +28,38 @@ def load_garbage_frames():
     return frames
 
 
-async def fly_garbage(canvas, column, garbage_frame, speed=0.5):
+async def fly_garbage(canvas, column, garbage_frame, speed=0.5, obstacles=None):
     """Animate garbage, flying from top to bottom. Сolumn position will stay same, as specified on start."""
     rows_number, columns_number = canvas.getmaxyx()
 
-    _, frame_width = get_frame_size(garbage_frame)
+    frame_height, frame_width = get_frame_size(garbage_frame)
 
     column = max(BORDER_WIDTH, min(column, columns_number - BORDER_WIDTH - frame_width))
-    
+
     row = 0
 
-    while row < rows_number:
-        draw_frame(canvas, row, column, garbage_frame)
-        await sleep(1)
-        draw_frame(canvas, row, column, garbage_frame, negative=True)
-        row += speed
+    obstacle = Obstacle(row, column, frame_height, frame_width)
+
+    if obstacles is not None:
+        obstacles.append(obstacle)
+
+    try:
+        while row < rows_number:
+            obstacle.row = row
+            obstacle.column = column
+
+            draw_frame(canvas, row, column, garbage_frame)
+            await sleep(1)
+            draw_frame(canvas, row, column, garbage_frame, negative=True)
+            row += speed
+    finally:
+        if obstacles is not None and obstacle in obstacles:
+            obstacles.remove(obstacle)
 
 
-async def fill_orbit_with_garbage(canvas, garbage_frame, coroutines, speed=0.5):
+async def fill_orbit_with_garbage(
+    canvas, garbage_frame, coroutines, speed=0.5, obstacles=None
+):
     """Бесконечно добавляет мусор на орбиту."""
     _, columns = canvas.getmaxyx()
 
@@ -59,4 +74,4 @@ async def fill_orbit_with_garbage(canvas, garbage_frame, coroutines, speed=0.5):
         max_col = columns - BORDER_WIDTH - frame_width
         column = random.randint(min_col, max_col)
 
-        coroutines.append(fly_garbage(canvas, column, frame, speed))
+        coroutines.append(fly_garbage(canvas, column, frame, speed, obstacles))

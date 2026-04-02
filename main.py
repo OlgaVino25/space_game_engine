@@ -5,6 +5,7 @@ import random
 from animate.blink import blink
 from animate.fire import fire
 from animate.spaceship import handle_spaceship
+from animate.obstacles import show_obstacles
 from animate.space_garbage import fill_orbit_with_garbage, load_garbage_frames
 
 
@@ -15,6 +16,7 @@ SYMBOLS = "+*.:"
 STARS_COUNT = 100
 SPACESHIP_SPEED = 5
 EXIT_PAUSE = 2
+GARBAGE_FRAMES = load_garbage_frames()
 
 with open("animate/rocket_frame_1.txt", "r") as file_1:
     text_1 = file_1.read()
@@ -62,6 +64,14 @@ def draw(canvas):
         fire(canvas, start_row, start_column, rows_speed=-0.3, columns_speed=0)
     )
 
+    obstacles = []
+
+    coroutines.append(show_obstacles(canvas, obstacles))
+
+    coroutines.append(
+        fill_orbit_with_garbage(canvas, GARBAGE_FRAMES, coroutines, obstacles=obstacles)
+    )
+
     exit_flag = [False]
 
     coroutines.append(
@@ -75,9 +85,6 @@ def draw(canvas):
             exit_flag=exit_flag,
         )
     )
-
-    garbage_frames = load_garbage_frames()
-    coroutines.append(fill_orbit_with_garbage(canvas, garbage_frames, coroutines))
 
     while coroutines:
         for coroutine in coroutines.copy():
