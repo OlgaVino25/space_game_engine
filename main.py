@@ -5,7 +5,6 @@ import random
 from animate.blink import blink
 from animate.fire import fire
 from animate.spaceship import handle_spaceship
-from animate.obstacles import show_obstacles
 from animate.space_garbage import fill_orbit_with_garbage, load_garbage_frames
 
 
@@ -70,8 +69,6 @@ def draw(canvas):
             obstacles=obstacles,
         )
     )
-
-    # coroutines.append(show_obstacles(canvas, obstacles))
 
     coroutines.append(
         fill_orbit_with_garbage(canvas, GARBAGE_FRAMES, coroutines, obstacles=obstacles)

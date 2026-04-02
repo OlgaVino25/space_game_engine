@@ -1,4 +1,3 @@
-import random
 from itertools import cycle
 
 from .curses_tools import draw_frame, get_frame_size, read_controls
