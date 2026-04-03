@@ -1,6 +1,6 @@
 import curses
-from .utils import sleep
-from .obstacles import obstacles_in_last_collisions
+from ..game.utils import sleep
+from ..game.obstacles import obstacles_in_last_collisions
 
 
 BORDER_WIDTH = 1

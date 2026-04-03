@@ -1,10 +1,9 @@
 from itertools import cycle
 
-from .curses_tools import draw_frame, get_frame_size, read_controls
+from ..tools.curses_tools import draw_frame, get_frame_size, read_controls
 from .fire import fire
-from .utils import sleep
-from .physics import update_speed
-from .obstacles import Obstacle
+from ..game.utils import sleep
+from ..game.physics import update_speed
 
 
 BORDER_OFFSET = 1
@@ -19,6 +18,7 @@ async def handle_spaceship(
     fading=0.8,
     exit_flag=None,
     obstacles=None,
+    current_year=None,
 ):
     """Управление кораблём с плавной физикой и стрельбой по пробелу.
 
@@ -30,6 +30,8 @@ async def handle_spaceship(
         fading: коэффициент трения (0..1).
         exit_flag: список [bool] для сигнала выхода.
         obstacles: список препятствий для проверки столкновений.
+        current_year: список из одного элемента [int] с текущим годом.
+                  Используется для активации пушки (стрельба доступна с 2020 года).
     """
 
     frame_height, frame_width = get_frame_size(frame1)
@@ -53,7 +55,7 @@ async def handle_spaceship(
                 exit_flag[0] = True
             break
 
-        if space_pressed:
+        if space_pressed and current_year is not None and current_year[0] >= 2020:
             shot_row = ship_row
             shot_col = ship_col + frame_width // 2
             coroutines.append(fire(canvas, shot_row, shot_col, obstacles=obstacles))
@@ -77,7 +79,6 @@ async def handle_spaceship(
         ship_col = max(BORDER_OFFSET, min(ship_col, max_col))
 
         if obstacles:
-            ship_bbox = (ship_row, ship_col, frame_height, frame_width)
             for obs in obstacles:
                 if obs.has_collision(ship_row, ship_col, frame_height, frame_width):
                     if exit_flag is not None:
