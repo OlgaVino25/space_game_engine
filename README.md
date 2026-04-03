@@ -3,7 +3,8 @@
 Асинхронная консольная игра на Python с использованием библиотеки curses.
 Пока что это просто звёздное небо и тестовый выстрел, но движок готов к расширению.
 
-<img width="735" height="333" alt="Снимок экрана 2026-03-25 125700" src="https://github.com/user-attachments/assets/4fa5a5ce-0019-4b76-84c3-3fe377dcd41a" />
+![Video Project 12](https://github.com/user-attachments/assets/bec1213f-797b-490d-bb98-23e2533287de)
+
 
 
 ## Особенности
