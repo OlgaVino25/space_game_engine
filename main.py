@@ -16,13 +16,6 @@ YEAR_TICKS = 15
 SYMBOLS = "+*.:"
 STARS_COUNT = 100
 EXIT_PAUSE = 2
-GARBAGE_FRAMES = load_garbage_frames()
-
-with open("animate/spaceship_fire/rocket_frame_1.txt", "r") as file_1:
-    text_1 = file_1.read()
-
-with open("animate/spaceship_fire/rocket_frame_2.txt", "r") as file_2:
-    text_2 = file_2.read()
 
 
 def draw(canvas):
@@ -38,6 +31,15 @@ def draw(canvas):
     Returns:
         None.
     """
+
+    garbage_frames = load_garbage_frames()
+
+    with open("animate/spaceship_fire/rocket_frame_1.txt", "r") as f1:
+        rocket_frame_1 = f1.read()
+
+    with open("animate/spaceship_fire/rocket_frame_2.txt", "r") as f2:
+        rocket_frame_2 = f2.read()
+
     curses.curs_set(False)
     canvas.border("|", "|")
     canvas.nodelay(True)
@@ -69,7 +71,7 @@ def draw(canvas):
     coroutines.append(
         fill_orbit_with_garbage(
             canvas,
-            GARBAGE_FRAMES,
+            garbage_frames,
             coroutines,
             obstacles=obstacles,
             current_year=current_year,
@@ -81,8 +83,8 @@ def draw(canvas):
     coroutines.append(
         handle_spaceship(
             canvas,
-            text_1,
-            text_2,
+            rocket_frame_1,
+            rocket_frame_2,
             coroutines,
             speed_limit=2,
             fading=0.8,
