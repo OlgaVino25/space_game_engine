@@ -1,3 +1,5 @@
+import os
+import glob
 import random
 
 from ..tools.curses_tools import draw_frame, get_frame_size
@@ -11,21 +13,16 @@ BORDER_WIDTH = 1
 MIN_GARBAGE_DELAY_TICKS = 1
 MAX_GARBAGE_DELAY_TICKS = 40
 GARBAGE_FRAME_DELAY = 1
+GARBAGE_DIR = "animate/garbage/"
 
 
 def load_garbage_frames():
-    """Загружает кадры мусора из файлов."""
+    """Загружает все кадры мусора из .txt файлов в папке GARBAGE_DIR."""
 
-    garbage_file = [
-        "animate/garbage/duck.txt",
-        "animate/garbage/hubble.txt",
-        "animate/garbage/lamp.txt",
-        "animate/garbage/trash_large.txt",
-        "animate/garbage/trash_small.txt",
-        "animate/garbage/trash_xl.txt",
-    ]
+    pattern = os.path.join(GARBAGE_DIR, "*.txt")
     frames = []
-    for file_path in garbage_file:
+
+    for file_path in sorted(glob.glob(pattern)):
         with open(file_path, "r") as f:
             frames.append(f.read())
     return frames
